@@ -1,7 +1,6 @@
 import React from 'react'
 
 import { CursorChatProps, CursorMode } from '@/types/type'
-import { CursorSVG } from '@/public/assets'
 
 const CursorChat = ({ cursor, cursorState, setCursorState, updateMyPresence }: CursorChatProps) => {
     
@@ -20,6 +19,7 @@ const CursorChat = ({ cursor, cursorState, setCursorState, updateMyPresence }: C
         {
             setCursorState({
                 mode: CursorMode.Chat,
+                // @ts-ignore
                 previousMessage: cursorState.message,
                 message: ''
             })
@@ -39,11 +39,11 @@ const CursorChat = ({ cursor, cursorState, setCursorState, updateMyPresence }: C
             <>
                 {/* <CursorSVG color="#000"/> */}
 
-                <div className="absolute left-2 top-5 bg-blue-500 px-4 py-2 text-sm leading-relaxed 
+                <div className="absolute left-2 top-5 bg-purple-500 px-4 py-2 text-sm leading-relaxed 
                 text-white rounded-[20px]">
                     {cursorState.previousMessage && (<div>{cursorState.previousMessage}</div>)}
                     <input autoFocus className="z-10 w-60 border-none bg-transparent text-white 
-                        placeholder-blue-300 outline-none"
+                        placeholder-purple-300 outline-none"
                         onChange={handleChange}
                         onKeyDown={handleKeyDown}
                         placeholder={cursorState.previousMessage ? "" : "Share your thoughts..."}

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import LiveCursors from './cursor/LiveCursors'
 import { useMyPresence, useOthers } from '@/liveblocks.config'
@@ -41,6 +41,44 @@ const Live = () => {
 
         updateMyPresence({ cursor: null, message: null })
     }, [])
+
+    useEffect(() => {
+        const onKeyUp = (e: KeyboardEvent) => {
+            /* when / is pressed, show popup chat field */
+            if (e.key === '/')
+            {
+                setCursorState({ 
+                    mode: CursorMode.Chat,
+                    previousMessage: null,
+                    message: ""
+                })
+            } 
+            /* when escape key is pressed, hide input popup 
+            and set presence's message to empty string */
+            else if (e.key === 'Escape')
+            {
+                updateMyPresence({ message: "" })
+                setCursorState({
+                    mode: CursorMode.Hidden
+                })
+            }
+        }
+
+        const onKeyDown = (e: KeyboardEvent) => {
+            // restrict browser default events when other keys are pressed
+            if (e.key === "/") {
+                e.preventDefault()
+            }
+        }
+
+        window.addEventListener("keydown", onKeyDown)
+        window.addEventListener("keyup", onKeyUp)
+
+        return () => {
+            window.removeEventListener("keyup", onKeyUp)
+            window.removeEventListener("keydown", onKeyDown)
+        }
+    }, [updateMyPresence])
 
     return (
         <div className="h-[100vh] w-full flex justify-center items-center"
