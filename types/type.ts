@@ -190,12 +190,12 @@ export type RenderCanvas = {
 };
 
 export type CursorChatProps = {
-  cursor: { x: number; y: number };
+  cursor: Position;
   cursorState: CursorState;
   setCursorState: (cursorState: CursorState) => void;
   updateMyPresence: (
     presence: Partial<{
-      cursor: { x: number; y: number };
+      cursor: Position;
       cursorColor: string;
       message: string;
     }>

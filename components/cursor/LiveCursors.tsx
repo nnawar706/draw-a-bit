@@ -4,6 +4,7 @@ import Cursor from './Cursor'
 import { COLORS } from '@/constants'
 
 const LiveCursors = ({ others }: LiveCursorProps) => {
+    // map on each users and show different cursors on exact position on screen
     return others.map(({ connectionId, presence }) => {
         if (!presence?.cursor) return
 
