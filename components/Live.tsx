@@ -5,6 +5,8 @@ import { useMyPresence, useOthers } from '@/liveblocks.config'
 import { CursorMode, CursorState, Reaction } from '@/types/type'
 import CursorChat from './cursor/CursorChat'
 import ReactionSelector from './reaction/ReactionSelector'
+import FlyingReaction from './reaction/FlyingReaction'
+import useInterval from '@/hooks/useInterval'
 
 const Live = () => {
     // returns list of other users currently present in the room
@@ -110,6 +112,16 @@ const Live = () => {
         }
     }, [updateMyPresence])
 
+    useInterval(() => {
+        if (cursorState.mode === CursorMode.Reaction && cursorState.isPressed && cursor) {
+            setReactions((prevReactions) => prevReactions.concat([{
+                point: {x: cursor.x, y: cursor.y},
+                value: cursorState.reaction,
+                timestamp: Date.now()
+            }]))
+        }
+    }, 100)
+
     return (
         <div className="h-[100vh] w-full flex justify-center items-center"
             onPointerMove={handlePointerMove} 
@@ -118,6 +130,13 @@ const Live = () => {
             onPointerDown={handlePointerDown} 
         >
             <h1 className="text-2xl text-white">draw-a-bit</h1>
+
+            {reactions.map((reaction) => <FlyingReaction
+                key={reaction.timestamp.toString()}
+                point={reaction.point}
+                timestamp={reaction.timestamp}
+                value={reaction.value}
+            />)}
 
             {cursor && 
             <CursorChat 

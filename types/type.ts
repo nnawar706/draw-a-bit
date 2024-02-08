@@ -23,6 +23,12 @@ export type ReactionProps = {
   setReaction: (reaction: string) => void;
 }
 
+export type FlyingReactionProps = {
+    point: Position;
+    timestamp: number;
+    value: string;
+};
+
 export type ReactionButtonProps = {
   reaction: string;
   onSelect: (reaction: string) => void;
