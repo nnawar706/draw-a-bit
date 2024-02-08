@@ -19,6 +19,15 @@ export type CursorProps = {
   message: string;
 }
 
+export type ReactionProps = {
+  setReaction: (reaction: string) => void;
+}
+
+export type ReactionButtonProps = {
+  reaction: string;
+  onSelect: (reaction: string) => void;
+}
+
 export type CursorState =
   | {
       mode: CursorMode.Hidden;
