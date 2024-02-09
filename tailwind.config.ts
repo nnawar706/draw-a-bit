@@ -22,6 +22,7 @@ const config = {
         primary: {
           black: "#14181F",
           green: "#56FFA6",
+          purple: "#d580ff",
           grey: {
             100: "#2B303B",
             200: "#202731",

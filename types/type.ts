@@ -59,10 +59,14 @@ export type Reaction = {
 };
 
 export type ReactionEvent = {
-  x: number;
-  y: number;
+  cursor: Position;
   value: string;
 };
+
+export type AvatarProps = {
+  otherStyles: string; 
+  name: string;
+}
 
 export type ShapeData = {
   type: string;
@@ -125,7 +129,7 @@ export type RightSidebarProps = {
   syncShapeInStorage: (obj: any) => void;
 };
 
-export type NavbarProps = {
+export type TopbarProps = {
   activeElement: ActiveElement;
   imageInputRef: React.MutableRefObject<HTMLInputElement | null>;
   handleImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;

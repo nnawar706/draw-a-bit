@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react'
 
 import LiveCursors from './cursor/LiveCursors'
-import { useMyPresence, useOthers } from '@/liveblocks.config'
-import { CursorMode, CursorState, Reaction } from '@/types/type'
+import { useBroadcastEvent, useEventListener, useMyPresence, useOthers } from '@/liveblocks.config'
+import { CursorMode, CursorState, Reaction, ReactionEvent } from '@/types/type'
 import CursorChat from './cursor/CursorChat'
 import ReactionSelector from './reaction/ReactionSelector'
 import FlyingReaction from './reaction/FlyingReaction'
@@ -11,6 +11,9 @@ import useInterval from '@/hooks/useInterval'
 const Live = () => {
     // returns list of other users currently present in the room
     const others = useOthers()
+
+    // broadcast reactions to other users
+    const broadcast = useBroadcastEvent()
     
     // current user cursor state
     const [cursorState, setCursorState] = useState<CursorState>({mode: CursorMode.Hidden})
@@ -78,7 +81,9 @@ const Live = () => {
                     message: ""
                 })
             } 
-            /* when r is pressed, show reaction list popup */
+            /* when r is pressed, show reaction list popup 
+            - only if current cursor state is already 
+            */
             else if (e.key === 'r')
             {
                 setCursorState({
@@ -112,6 +117,13 @@ const Live = () => {
         }
     }, [updateMyPresence])
 
+    // remove hidden reactions from state array every sec not to overuse array space
+    useInterval(() => {
+        // set reactions array with reactions that has created in last 4 secs
+        setReactions((prevReactions) => 
+        prevReactions.filter((r) => r.timestamp > Date.now() - 4000))
+    }, 1000)
+
     useInterval(() => {
         if (cursorState.mode === CursorMode.Reaction && cursorState.isPressed && cursor) {
             setReactions((prevReactions) => prevReactions.concat([{
@@ -119,8 +131,24 @@ const Live = () => {
                 value: cursorState.reaction,
                 timestamp: Date.now()
             }]))
+
+            broadcast({
+                cursor: cursor,
+                value: cursorState.reaction
+            })
         }
     }, 100)
+
+    // get and show the broadcasted event reactions
+    useEventListener((eventData) => {
+        const event = eventData.event as ReactionEvent
+
+        setReactions((prevReactions) => prevReactions.concat([{
+            point: {x: event.cursor.x, y: event.cursor.y},
+            value: event.value,
+            timestamp: Date.now()
+        }]))
+    })
 
     return (
         <div className="h-[100vh] w-full flex justify-center items-center"

@@ -38,7 +38,9 @@ const CursorChat = ({ cursor, cursorState, setCursorState, updateMyPresence }: C
             cursorState.mode === CursorMode.Chat &&
             <>
                 <div className="absolute left-2 top-5 bg-purple-500 px-4 py-2 text-sm leading-relaxed 
-                text-white rounded-[20px]">
+                text-white rounded-[20px]" 
+                // to stop other key events from triggering i.e. pressing r must not open reactions popu while chatting
+                onKeyUp={(e) => e.stopPropagation()}>
                     {cursorState.previousMessage && (<div>{cursorState.previousMessage}</div>)}
                     <input autoFocus className="z-10 w-60 border-none bg-transparent text-white 
                         placeholder-purple-300 outline-none"

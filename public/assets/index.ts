@@ -1,3 +1,4 @@
+import Logo from './logo.svg'
 import CursorSVG from "./CursorSVG"
 
-export { CursorSVG }
+export { Logo, CursorSVG }
